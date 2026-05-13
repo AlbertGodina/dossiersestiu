@@ -3,7 +3,7 @@
 Dossiers d'estiu imprimibles per a alumnes de Primària a Catalunya.  
 Dissenyats per consolidar aprenentatges entre cursos de manera lúdica i progressiva.
 
-🌐 **Veure en línia:** [https://TU_USUARI.github.io/dossiers-estiu](https://TU_USUARI.github.io/dossiers-estiu)
+🌐 **Veure en línia:** [https://albertgodina.github.io/dossiersestiu/index.html](https://albertgodina.github.io/dossiersestiu/index.html)
 
 ---
 
