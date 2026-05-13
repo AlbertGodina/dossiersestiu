@@ -2,1191 +2,953 @@
 <html lang="ca">
 <head>
 <meta charset="UTF-8">
-<title>Dossier d'Estiu – Bloc 1 (Pàg. 1–10)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier d'Estiu — I5 a 1r de Primària</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════
+   INTERFÍCIE (s'amaga en imprimir)
+═══════════════════════════════════════════ */
   :root {
-    --groc: #FFD93D;
+    --groc:    #FFD93D;
     --taronja: #FF8C42;
-    --blau: #4ECDC4;
-    --verd: #A8E063;
-    --rosa: #FF6B9D;
-    --lila: #C77DFF;
-    --blanc: #FFFFFF;
+    --blau:    #4ECDC4;
+    --verd:    #A8E063;
+    --rosa:    #FF6B9D;
+    --lila:    #C77DFF;
+    --blanc:   #FFFFFF;
     --gris-clar: #F7F5F0;
-    --text: #2D2D2D;
-    --muted: #888;
+    --text:    #2D2D2D;
+    --muted:   #888;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #EEEAE0; color: var(--text); }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: #f0f0f0;
+  /* ── BARRA SUPERIOR ── */
+  .ui-bar {
+    background: white;
+    border-bottom: 3px solid var(--groc);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 1rem;
+  }
+  .ui-back {
+    font-family: 'Fredoka One', cursive;
+    font-size: .95rem;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    transition: color .15s;
+  }
+  .ui-back:hover { color: var(--taronja); }
+  .ui-titol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
     color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ui-titol span { color: var(--taronja); }
+
+  .ui-accions { display: flex; gap: .6rem; align-items: center; flex-shrink: 0; }
+
+  .btn-pdf {
+    background: var(--taronja);
+    color: white;
+    border: none;
+    padding: .5rem 1.1rem;
+    border-radius: 30px;
+    font-family: 'Fredoka One', cursive;
+    font-size: .95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    transition: background .15s, transform .1s;
+  }
+  .btn-pdf:hover { background: #e07030; transform: scale(1.03); }
+  .btn-pdf:active { transform: scale(.98); }
+
+  /* ── BLOCS NAV (seccions) ── */
+  .ui-blocs {
+    background: white;
+    border-bottom: 2px solid #EEE;
+    padding: .6rem 2rem;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ui-bloc-label {
+    font-size: .75rem;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-right: .25rem;
+  }
+  .bloc-pill {
+    font-family: 'Fredoka One', cursive;
+    font-size: .82rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: all .15s;
+  }
+  .bloc-pill.fet       { background: #FFF0E6; color: var(--taronja); border-color: var(--taronja); }
+  .bloc-pill.fet:hover { background: var(--taronja); color: white; }
+  .bloc-pill.aviat     { background: #F5F5F5; color: #BBB; border-color: #DDD; cursor: default; }
+
+  /* ── WRAPPER DE PÀGINES ── */
+  .pagines-wrapper {
+    padding: 1.5rem 1rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
   }
 
+  .seccio-label {
+    width: 210mm;
+    font-family: 'Fredoka One', cursive;
+    font-size: .95rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: .5rem 0 .25rem;
+    border-bottom: 2px dashed #CCC;
+    margin-bottom: .25rem;
+  }
+
+/* ═══════════════════════════════════════════
+   ESTILS DE LES PÀGINES DEL DOSSIER
+═══════════════════════════════════════════ */
   .page {
     width: 210mm;
     min-height: 297mm;
     background: white;
-    margin: 0 auto 10mm;
     padding: 12mm 14mm;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 3px 16px rgba(0,0,0,.12);
+    border-radius: 4px;
     page-break-after: always;
   }
-
-  /* ── HEADER de cada pàgina ── */
   .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6mm;
-    padding-bottom: 3mm;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6mm; padding-bottom: 3mm;
     border-bottom: 3px solid var(--groc);
   }
-  .page-num {
-    font-family: 'Fredoka One', cursive;
-    font-size: 13pt;
-    color: var(--muted);
-  }
-  .page-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 11pt;
-    color: var(--taronja);
-    letter-spacing: 1px;
-  }
-  .estrella { color: var(--groc); font-size: 16pt; }
+  .page-num   { font-family:'Fredoka One',cursive; font-size:13pt; color:var(--muted); }
+  .page-title { font-family:'Fredoka One',cursive; font-size:11pt; color:var(--taronja); letter-spacing:1px; }
+  .estrella   { color:var(--groc); font-size:16pt; }
 
-  /* ── TITOL ACTIVITAT ── */
-  .titol {
-    font-family: 'Fredoka One', cursive;
-    font-size: 22pt;
-    color: var(--blau);
-    text-align: center;
-    margin-bottom: 4mm;
-    line-height: 1.2;
-  }
-  .titol.taronja { color: var(--taronja); }
-  .titol.verd    { color: #5aa82e; }
-  .titol.rosa    { color: var(--rosa); }
-  .titol.lila    { color: var(--lila); }
+  .titol { font-family:'Fredoka One',cursive; font-size:22pt; color:var(--blau); text-align:center; margin-bottom:4mm; line-height:1.2; }
+  .titol.taronja { color:var(--taronja); }
+  .titol.verd    { color:#5aa82e; }
+  .titol.rosa    { color:var(--rosa); }
+  .titol.lila    { color:var(--lila); }
+  .titol.groc    { color:#c49a00; }
 
-  /* ── INSTRUCCIONS ── */
   .instruccio {
-    background: var(--gris-clar);
-    border-left: 5px solid var(--blau);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 12pt;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 5mm;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background:var(--gris-clar); border-left:5px solid var(--blau); border-radius:8px;
+    padding:6px 12px; font-size:12pt; font-weight:700; color:var(--text);
+    margin-bottom:5mm; display:flex; align-items:center; gap:8px;
   }
-  .instruccio.taronja { border-left-color: var(--taronja); }
-  .instruccio.verd    { border-left-color: #5aa82e; }
-  .instruccio.rosa    { border-left-color: var(--rosa); }
-  .instruccio.lila    { border-left-color: var(--lila); }
-  .ico { font-size: 18pt; }
+  .instruccio.taronja { border-left-color:var(--taronja); }
+  .instruccio.verd    { border-left-color:#5aa82e; }
+  .instruccio.rosa    { border-left-color:var(--rosa); }
+  .instruccio.lila    { border-left-color:var(--lila); }
+  .instruccio.groc    { border-left-color:#c49a00; }
+  .ico { font-size:18pt; }
 
-  /* ── LÍNIES D'ESCRIPTURA ── */
-  .lines-bloc {
-    display: flex;
-    flex-direction: column;
-    gap: 4mm;
-    margin: 4mm 0;
-  }
+  .lines-bloc { display:flex; flex-direction:column; gap:4mm; margin:4mm 0; }
   .write-line {
-    border-bottom: 2.5px dashed #BDBDBD;
-    height: 14mm;
-    width: 100%;
-    position: relative;
+    border-bottom:2.5px dashed #BDBDBD; height:14mm; width:100%; position:relative;
   }
   .write-line::before {
-    content: '';
-    position: absolute;
-    bottom: 5mm;
-    left: 0; right: 0;
-    border-bottom: 1px dotted #E0E0E0;
+    content:''; position:absolute; bottom:5mm; left:0; right:0;
+    border-bottom:1px dotted #E0E0E0;
   }
+  .write-line-sm { border-bottom:2.5px dashed #BDBDBD; height:11mm; width:100%; }
 
-  /* ── LLETRA GRAN (repassar) ── */
-  .lletra-exemple {
-    font-family: 'Fredoka One', cursive;
-    font-size: 80pt;
-    color: #E0E0E0;
-    text-align: center;
-    line-height: 1;
-    letter-spacing: 10mm;
-    margin: 4mm 0;
-  }
-  .lletra-exemple span { color: var(--blau); }
-
-  .lletra-punteig {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 3mm;
-    margin: 5mm 0;
-  }
+  .lletra-punteig { display:grid; grid-template-columns:repeat(5,1fr); gap:3mm; margin:5mm 0; }
   .lletra-box {
-    border: 2.5px dashed #BDBDBD;
-    border-radius: 8px;
-    height: 22mm;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 36pt;
+    border:2.5px dashed #BDBDBD; border-radius:8px; height:20mm;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fredoka One',cursive; font-size:32pt;
   }
-  .lletra-box.model {
-    border-color: var(--blau);
-    border-style: solid;
-    color: var(--blau);
-  }
-  .lletra-box.model.taronja { border-color: var(--taronja); color: var(--taronja); }
-  .lletra-box.model.verd    { border-color: #5aa82e; color: #5aa82e; }
-  .lletra-box.model.rosa    { border-color: var(--rosa); color: var(--rosa); }
-  .lletra-box.model.lila    { border-color: var(--lila); color: var(--lila); }
+  .lletra-box.model         { border-style:solid; border-color:var(--blau); color:var(--blau); }
+  .lletra-box.model.taronja { border-color:var(--taronja); color:var(--taronja); }
+  .lletra-box.model.verd    { border-color:#5aa82e; color:#5aa82e; }
+  .lletra-box.model.rosa    { border-color:var(--rosa); color:var(--rosa); }
+  .lletra-box.model.lila    { border-color:var(--lila); color:var(--lila); }
+  .lletra-box.model.groc    { border-color:#c49a00; color:#c49a00; }
 
-  /* ── IMATGE-PARAULA ── */
-  .img-paraula-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5mm;
-    margin: 5mm 0;
-  }
-  .img-paraula-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3mm;
-  }
-  .dibuix-box {
-    width: 100%;
-    aspect-ratio: 1;
-    border: 2.5px solid #E0E0E0;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 44pt;
-    background: var(--gris-clar);
-  }
-  .paraula-box {
-    font-family: 'Fredoka One', cursive;
-    font-size: 14pt;
-    letter-spacing: 2px;
-    text-align: center;
-    color: var(--text);
-  }
+  .divider { border:none; border-top:2px dashed #E0E0E0; margin:5mm 0; }
+  .duo-grid  { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:4mm 0; }
+  .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; margin:4mm 0; }
 
-  /* ── SÍL·LABES ── */
-  .sil-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5mm;
-    margin: 5mm 0;
+  .pg-footer {
+    position:absolute; bottom:6mm; left:14mm; right:14mm;
+    display:flex; justify-content:space-between; align-items:center;
+    border-top:1.5px solid #EEE; padding-top:2mm;
   }
-  .sil-item {
-    border: 2px solid #E0E0E0;
-    border-radius: 10px;
-    padding: 4mm;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3mm;
-    background: var(--gris-clar);
+  .pg-footer span { font-size:9pt; color:var(--muted); }
+  .star-buit { font-size:20pt; color:#E0E0E0; }
+
+  .cons-taula { display:grid; grid-template-columns:repeat(5,1fr); gap:3mm; margin:4mm 0; }
+  .cons-cell {
+    display:flex; flex-direction:column; align-items:center; gap:1mm;
+    border:2px solid #E0E0E0; border-radius:8px; padding:2mm;
+    background:var(--gris-clar);
   }
-  .sil-emoji { font-size: 36pt; }
-  .sil-paraula {
-    font-family: 'Fredoka One', cursive;
-    font-size: 14pt;
-    letter-spacing: 1px;
-    color: var(--text);
+  .cons-ll  { font-family:'Fredoka One',cursive; font-size:24pt; color:var(--blau); line-height:1; }
+  .cons-ex  { font-size:18pt; }
+  .cons-nm  { font-family:'Fredoka One',cursive; font-size:9pt; color:var(--muted); letter-spacing:1px; }
+
+  .sil2-grid { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:4mm 0; }
+  .sil2-item {
+    border:2px solid #E0E0E0; border-radius:10px; padding:4mm;
+    background:var(--gris-clar); display:flex; flex-direction:column; gap:3mm;
   }
-  .sil-cercles {
-    display: flex; gap: 3mm;
+  .sil2-emoji  { font-size:32pt; text-align:center; }
+  .sil2-paraula-div { display:flex; justify-content:center; gap:1mm; align-items:center; }
+  .sil2-sil {
+    font-family:'Fredoka One',cursive; font-size:18pt; letter-spacing:2px;
+    padding:2mm 4mm; border-radius:6px; border:2px solid transparent;
   }
-  .cercle {
-    width: 10mm; height: 10mm;
-    border: 2px solid var(--taronja);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 11pt;
-    color: var(--taronja);
+  .sil2-sil.s1 { background:#EAF3DE; border-color:#5aa82e; color:#5aa82e; }
+  .sil2-sil.s2 { background:#E8F8FF; border-color:var(--blau); color:var(--blau); }
+  .sil2-guio { font-family:'Fredoka One',cursive; font-size:22pt; color:var(--muted); }
+  .sil2-escriu { border-bottom:2.5px solid var(--taronja); height:11mm; }
+
+  .ordena-grid { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:4mm 0; }
+  .ordena-item {
+    border:2px solid #E0E0E0; border-radius:10px; padding:4mm;
+    background:var(--gris-clar); display:flex; flex-direction:column;
+    align-items:center; gap:3mm;
   }
-  .cercle.ple { background: var(--taronja); color: white; }
-  .sil-resposta {
-    display: flex; align-items: center; gap: 2mm;
-    font-size: 12pt; font-weight: 700; color: var(--text);
+  .ordena-emoji  { font-size:32pt; }
+  .ordena-lletres { display:flex; gap:2mm; flex-wrap:wrap; justify-content:center; }
+  .lletra-pill {
+    font-family:'Fredoka One',cursive; font-size:18pt;
+    border:2.5px solid var(--taronja); border-radius:8px;
+    width:11mm; height:11mm; display:flex; align-items:center;
+    justify-content:center; background:white; color:var(--text);
   }
-  .resposta-box {
-    width: 12mm; height: 10mm;
-    border-bottom: 3px solid var(--taronja);
-    display: inline-block;
+  .ordena-buits { display:flex; gap:2mm; }
+  .ordena-buit  { width:11mm; height:11mm; border-bottom:3px solid var(--blau); }
+
+  .frase-comp {
+    display:flex; align-items:center; gap:3mm; flex-wrap:wrap;
+    background:var(--gris-clar); border-radius:8px; padding:4mm 5mm;
+    margin-bottom:4mm;
+  }
+  .frase-ico  { font-size:24pt; }
+  .frase-text {
+    font-family:'Fredoka One',cursive; font-size:15pt;
+    letter-spacing:1px; color:var(--text);
+    display:flex; align-items:center; gap:2mm; flex-wrap:wrap;
+  }
+  .buit-frase { display:inline-block; min-width:28mm; height:10mm; border-bottom:3px solid var(--taronja); vertical-align:bottom; }
+  .caixa-opcions { display:flex; gap:3mm; flex-wrap:wrap; margin-top:2mm; margin-left:10mm; }
+  .opcio {
+    font-family:'Fredoka One',cursive; font-size:13pt;
+    border:2px solid var(--blau); border-radius:6px;
+    padding:1mm 4mm; color:var(--blau); background:white;
   }
 
-  /* ── SO INICIAL ── */
-  .so-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4mm;
-    margin: 5mm 0;
+  .dictat-fila {
+    display:grid; grid-template-columns:auto 1fr;
+    align-items:center; gap:4mm; margin-bottom:5mm;
   }
-  .so-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2mm;
-    padding: 3mm;
-    border-radius: 8px;
-    border: 2.5px solid #E0E0E0;
+  .dictat-model {
+    font-family:'Fredoka One',cursive; font-size:15pt;
+    background:var(--gris-clar); border-radius:8px;
+    padding:3mm 5mm; color:var(--text); letter-spacing:1px;
+    min-width:55mm; text-align:center; border:2px solid #E0E0E0;
   }
-  .so-emoji { font-size: 30pt; }
-  .so-nom {
-    font-family: 'Fredoka One', cursive;
-    font-size: 11pt;
-    letter-spacing: 1px;
-    text-align: center;
-  }
-  .tick-box {
-    width: 9mm; height: 9mm;
-    border: 2.5px solid var(--blau);
-    border-radius: 4px;
-    margin-top: 1mm;
-  }
-  .so-item.marcat { border-color: var(--verd); background: #f4fce4; }
-  .so-item.marcat .tick-box { background: var(--verd); border-color: #5aa82e; }
+  .dictat-escriu { border-bottom:2.5px solid var(--lila); height:13mm; flex:1; }
 
-  /* ── LLEGEIX I DIBUIXA ── */
-  .llegeix-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5mm;
-    margin: 5mm 0;
+  .ordp-item { margin-bottom:6mm; }
+  .ordp-ico  { font-size:20pt; }
+  .paraula-tag {
+    font-family:'Fredoka One',cursive; font-size:14pt; letter-spacing:1px;
+    border:2px solid var(--blau); border-radius:8px;
+    padding:2mm 4mm; background:var(--gris-clar); color:var(--blau);
+    display:inline-block; margin:1mm;
   }
-  .llegeix-item {
-    border: 2.5px solid #E0E0E0;
-    border-radius: 10px;
-    padding: 4mm;
-    background: var(--gris-clar);
-  }
-  .frase-llegir {
-    font-family: 'Fredoka One', cursive;
-    font-size: 13pt;
-    color: var(--blau);
-    margin-bottom: 3mm;
-    text-align: center;
-    letter-spacing: 1px;
-  }
-  .dibuix-area {
-    border: 2.5px dashed #BDBDBD;
-    border-radius: 8px;
-    height: 38mm;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #CCC;
-    font-size: 10pt;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
+  .ordp-linia { border-bottom:2.5px dashed #BDBDBD; height:13mm; margin-top:3mm; }
 
-  /* ── ESTRELLETES i SEGELL ── */
-  .recompensa {
-    display: flex;
-    justify-content: flex-end;
-    gap: 2mm;
-    margin-top: 4mm;
+  .repas-box {
+    border:3px solid var(--groc); border-radius:14px;
+    padding:5mm; background:linear-gradient(135deg,#FFF9E3,#E8F8FF);
+    text-align:center;
   }
-  .star-buit {
-    font-size: 20pt;
-    color: #E0E0E0;
+  .repas-titol { font-family:'Fredoka One',cursive; font-size:18pt; color:var(--taronja); margin-bottom:3mm; }
+  .gomet-cercle { display:inline-block; width:14mm; height:14mm; border:2.5px dashed; border-radius:50%; margin:0 2mm; }
+
+  .bloc-vocal { background:var(--gris-clar); border-radius:10px; padding:4mm; text-align:center; }
+  .vocal-gran { font-family:'Fredoka One',cursive; font-size:52pt; line-height:1; color:var(--blau); }
+  .vocal-gran.taronja { color:var(--taronja); }
+  .vocal-gran.verd    { color:#5aa82e; }
+  .vocal-gran.rosa    { color:var(--rosa); }
+  .vocal-gran.lila    { color:var(--lila); }
+  .vocal-sub { font-size:10pt; font-weight:600; color:var(--muted); margin-top:1mm; }
+
+  .paraules-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4mm; margin:5mm 0; }
+  .paraula-llegir {
+    font-family:'Fredoka One',cursive; font-size:18pt; letter-spacing:2px;
+    text-align:center; border:2.5px solid var(--blau); border-radius:8px;
+    padding:3mm; color:var(--blau);
   }
+  .completa-grid  { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:5mm 0; }
+  .completa-item  { display:flex; align-items:center; gap:2mm; background:var(--gris-clar); border-radius:8px; padding:3mm 5mm; }
+  .completa-emoji { font-size:28pt; }
+  .completa-paraula {
+    font-family:'Fredoka One',cursive; font-size:18pt; letter-spacing:3px;
+    color:var(--text); display:flex; align-items:center; gap:1mm;
+  }
+  .lletra-buida { display:inline-block; width:14mm; height:10mm; border-bottom:3px solid var(--taronja); margin:0 1mm; vertical-align:bottom; }
+
+  .sil-grid   { display:grid; grid-template-columns:repeat(2,1fr); gap:5mm; margin:5mm 0; }
+  .sil-item   { border:2px solid #E0E0E0; border-radius:10px; padding:4mm; display:flex; flex-direction:column; align-items:center; gap:3mm; background:var(--gris-clar); }
+  .sil-emoji  { font-size:36pt; }
+  .sil-paraula { font-family:'Fredoka One',cursive; font-size:14pt; letter-spacing:1px; color:var(--text); }
+  .sil-cercles { display:flex; gap:3mm; }
+  .cercle     { width:10mm; height:10mm; border:2px solid var(--taronja); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Fredoka One',cursive; font-size:11pt; color:var(--taronja); }
+  .cercle.ple { background:var(--taronja); color:white; }
+  .sil-resposta { display:flex; align-items:center; gap:2mm; font-size:12pt; font-weight:700; color:var(--text); }
+  .resposta-box { width:12mm; height:10mm; border-bottom:3px solid var(--taronja); display:inline-block; }
+
+  .so-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:4mm; margin:5mm 0; }
+  .so-item  { display:flex; flex-direction:column; align-items:center; gap:2mm; padding:3mm; border-radius:8px; border:2.5px solid #E0E0E0; }
+  .so-emoji { font-size:30pt; }
+  .so-nom   { font-family:'Fredoka One',cursive; font-size:11pt; letter-spacing:1px; text-align:center; }
+  .tick-box { width:9mm; height:9mm; border:2.5px solid var(--blau); border-radius:4px; margin-top:1mm; }
+
+  .llegeix-grid { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:5mm 0; }
+  .llegeix-item { border:2.5px solid #E0E0E0; border-radius:10px; padding:4mm; background:var(--gris-clar); }
+  .frase-llegir { font-family:'Fredoka One',cursive; font-size:13pt; color:var(--blau); margin-bottom:3mm; text-align:center; letter-spacing:1px; }
+  .dibuix-area  { border:2.5px dashed #BDBDBD; border-radius:8px; height:38mm; background:white; display:flex; align-items:center; justify-content:center; color:#CCC; font-size:10pt; font-weight:600; letter-spacing:1px; }
+
+  .rel-word { font-family:'Fredoka One',cursive; font-size:13pt; letter-spacing:1px; text-align:center; border:2px solid var(--taronja); border-radius:8px; padding:2mm 4mm; color:var(--taronja); }
+  .rel-emoji { font-size:30pt; text-align:center; border:2px solid #E0E0E0; border-radius:10px; padding:2mm 4mm; background:var(--gris-clar); }
 
   /* ── PORTADA ── */
   .portada { background: linear-gradient(135deg, #FFF9E3 0%, #E8F8FF 100%); }
-  .portada-titol {
-    font-family: 'Fredoka One', cursive;
-    font-size: 40pt;
-    color: var(--taronja);
-    text-align: center;
-    line-height: 1.1;
-    margin: 8mm 0 4mm;
-  }
-  .portada-sub {
-    font-family: 'Fredoka One', cursive;
-    font-size: 20pt;
-    color: var(--blau);
-    text-align: center;
-    margin-bottom: 8mm;
-  }
-  .portada-deco {
-    text-align: center;
-    font-size: 50pt;
-    margin: 4mm 0;
-    line-height: 1.4;
-  }
-  .nom-bloc {
-    background: white;
-    border: 3px solid var(--groc);
-    border-radius: 14px;
-    padding: 8mm 10mm;
-    margin: 6mm 0;
-  }
-  .nom-label {
-    font-size: 13pt;
-    font-weight: 800;
-    color: var(--taronja);
-    letter-spacing: 2px;
-    margin-bottom: 3mm;
-  }
-  .nom-linia { border-bottom: 3px solid var(--text); height: 14mm; }
-  .portada-footer {
-    position: absolute;
-    bottom: 10mm; left: 0; right: 0;
-    text-align: center;
-    font-size: 10pt;
-    color: var(--muted);
-  }
+  .portada-titol { font-family:'Fredoka One',cursive; font-size:40pt; color:var(--taronja); text-align:center; line-height:1.1; margin:8mm 0 4mm; }
+  .portada-sub   { font-family:'Fredoka One',cursive; font-size:20pt; color:var(--blau); text-align:center; margin-bottom:8mm; }
+  .portada-footer { position:absolute; bottom:10mm; left:0; right:0; text-align:center; font-size:10pt; color:var(--muted); }
+  .nom-linia { border-bottom:3px solid var(--text); height:14mm; }
 
-  /* ── UNEIX AMB FLETXA ── */
-  .uneix-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5mm;
-    margin: 5mm 0;
-  }
-  .uneix-col {
-    display: flex;
-    flex-direction: column;
-    gap: 5mm;
-    width: 38%;
-  }
-  .uneix-col.centre { width: 20%; align-items: center; justify-content: center; }
-  .uneix-emoji {
-    font-size: 34pt;
-    text-align: center;
-    border: 2.5px solid #E0E0E0;
-    border-radius: 10px;
-    padding: 3mm;
-    background: var(--gris-clar);
-  }
-  .uneix-word {
-    font-family: 'Fredoka One', cursive;
-    font-size: 14pt;
-    letter-spacing: 1px;
-    text-align: center;
-    border: 2.5px solid var(--blau);
-    border-radius: 8px;
-    padding: 3mm 5mm;
-    color: var(--blau);
-  }
+  .uneix-word { font-family:'Fredoka One',cursive; font-size:14pt; letter-spacing:1px; text-align:center; border:2.5px solid var(--blau); border-radius:8px; padding:3mm 5mm; color:var(--blau); }
+  .uneix-emoji { font-size:34pt; text-align:center; border:2.5px solid #E0E0E0; border-radius:10px; padding:3mm; background:var(--gris-clar); }
 
-  /* ── FOOTER de pàgina ── */
-  .pg-footer {
-    position: absolute;
-    bottom: 6mm; left: 14mm; right: 14mm;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1.5px solid #EEE;
-    padding-top: 2mm;
-  }
-  .pg-footer span {
-    font-size: 9pt;
-    color: var(--muted);
-  }
-
-  /* ── PRINT ── */
+/* ═══════════════════════════════════════════
+   IMPRESSIÓ
+═══════════════════════════════════════════ */
   @media print {
-    body { background: white; }
-    .page {
-      margin: 0;
-      padding: 12mm 14mm;
-      page-break-after: always;
-      box-shadow: none;
-    }
+    .ui-bar, .ui-blocs, .pagines-wrapper > .seccio-label { display: none !important; }
+    body   { background: white; }
+    .pagines-wrapper { padding: 0; gap: 0; }
+    .page  { box-shadow: none; border-radius: 0; page-break-after: always; }
   }
   @page { size: A4; margin: 0; }
 
-  /* ── PANTALLA (previsualització) ── */
   @media screen {
-    body { padding: 8mm; }
-    .page {
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-      border-radius: 4px;
-    }
-  }
-
-  .divider {
-    border: none;
-    border-top: 2px dashed #E0E0E0;
-    margin: 5mm 0;
-  }
-
-  .duo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5mm;
-    margin: 4mm 0;
-  }
-
-  .bloc-vocal {
-    background: var(--gris-clar);
-    border-radius: 10px;
-    padding: 4mm;
-    text-align: center;
-  }
-  .vocal-gran {
-    font-family: 'Fredoka One', cursive;
-    font-size: 52pt;
-    line-height: 1;
-    color: var(--blau);
-  }
-  .vocal-gran.taronja { color: var(--taronja); }
-  .vocal-gran.verd    { color: #5aa82e; }
-  .vocal-gran.rosa    { color: var(--rosa); }
-  .vocal-gran.lila    { color: var(--lila); }
-  .vocal-sub {
-    font-size: 10pt;
-    font-weight: 600;
-    color: var(--muted);
-    margin-top: 1mm;
-  }
-
-  /* Paraules per llegir */
-  .paraules-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4mm;
-    margin: 5mm 0;
-  }
-  .paraula-llegir {
-    font-family: 'Fredoka One', cursive;
-    font-size: 18pt;
-    letter-spacing: 2px;
-    text-align: center;
-    border: 2.5px solid var(--blau);
-    border-radius: 8px;
-    padding: 3mm;
-    color: var(--blau);
-  }
-
-  /* Completar paraula */
-  .completa-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5mm;
-    margin: 5mm 0;
-  }
-  .completa-item {
-    display: flex;
-    align-items: center;
-    gap: 2mm;
-    background: var(--gris-clar);
-    border-radius: 8px;
-    padding: 3mm 5mm;
-  }
-  .completa-emoji { font-size: 28pt; }
-  .completa-paraula {
-    font-family: 'Fredoka One', cursive;
-    font-size: 18pt;
-    letter-spacing: 3px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 1mm;
-  }
-  .lletra-buida {
-    display: inline-block;
-    width: 14mm;
-    height: 10mm;
-    border-bottom: 3px solid var(--taronja);
-    margin: 0 1mm;
-    vertical-align: bottom;
+    body { padding-bottom: 2rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 1 – PORTADA / EL MEU NOM       -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── BARRA UI ── -->
+<div class="ui-bar">
+  <a class="ui-back" href="../../index.html">← Inici</a>
+  <div class="ui-titol">Dossier <span>I5 → 1r</span> de Primària</div>
+  <div class="ui-accions">
+    <button class="btn-pdf" onclick="window.print()">🖨️ Descarregar / Imprimir PDF</button>
+  </div>
+</div>
+
+<!-- ── PILLS DE BLOCS ── -->
+<div class="ui-blocs">
+  <span class="ui-bloc-label">BLOCS:</span>
+  <a class="bloc-pill fet" href="#bloc1">Bloc 1 · Pàg. 1–10</a>
+  <a class="bloc-pill fet" href="#bloc2">Bloc 2 · Pàg. 11–20</a>
+  <span class="bloc-pill aviat">Bloc 3 · Pàg. 21–30 🔜</span>
+  <span class="bloc-pill aviat">Bloc 4 · Pàg. 31–40 🔜</span>
+  <span class="bloc-pill aviat">Bloc 5 · Pàg. 41–50 🔜</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PÀGINES DEL DOSSIER
+═══════════════════════════════════════════════════════ -->
+<div class="pagines-wrapper">
+
+<div class="seccio-label" id="bloc1">📘 BLOC 1 — Lectoescriptura (pàg. 1–10)</div>
+
+<!-- ── PÀG 1 PORTADA ── -->
 <div class="page portada">
-  <div class="portada-deco">☀️ 🌊 🍦 🏖️</div>
+  <div style="text-align:center;font-size:50pt;margin:4mm 0 2mm;">☀️ 🌊 🍦 🏖️</div>
   <div class="portada-titol">DOSSIER<br>D'ESTIU</div>
   <div class="portada-sub">Lectoescriptura · Matemàtiques · Jocs</div>
-
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin:6mm 0;">
-    <div style="background:white; border:3px solid var(--blau); border-radius:14px; padding:6mm; text-align:center;">
-      <div style="font-family:'Fredoka One',cursive; font-size:14pt; color:var(--blau); margin-bottom:3mm;">✏️ EL MEU NOM</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin:6mm 0;">
+    <div style="background:white;border:3px solid var(--blau);border-radius:14px;padding:6mm;text-align:center;">
+      <div style="font-family:'Fredoka One',cursive;font-size:14pt;color:var(--blau);margin-bottom:3mm;">✏️ EL MEU NOM</div>
       <div class="nom-linia"></div>
     </div>
-    <div style="background:white; border:3px solid var(--taronja); border-radius:14px; padding:6mm; text-align:center;">
-      <div style="font-family:'Fredoka One',cursive; font-size:14pt; color:var(--taronja); margin-bottom:3mm;">📅 ANY</div>
+    <div style="background:white;border:3px solid var(--taronja);border-radius:14px;padding:6mm;text-align:center;">
+      <div style="font-family:'Fredoka One',cursive;font-size:14pt;color:var(--taronja);margin-bottom:3mm;">📅 ANY</div>
       <div class="nom-linia"></div>
     </div>
   </div>
-
-  <div style="background:white; border:3px solid var(--verd); border-radius:14px; padding:6mm; margin-bottom:5mm;">
-    <div style="font-family:'Fredoka One',cursive; font-size:14pt; color:#5aa82e; margin-bottom:3mm;">🎨 EL MEU DIBUIX (DIBUIXA'T A TU MATEIX!)</div>
-    <div style="height:52mm; border:2.5px dashed #BDBDBD; border-radius:8px; background:var(--gris-clar);"></div>
+  <div style="background:white;border:3px solid var(--verd);border-radius:14px;padding:6mm;margin-bottom:5mm;">
+    <div style="font-family:'Fredoka One',cursive;font-size:14pt;color:#5aa82e;margin-bottom:3mm;">🎨 EL MEU DIBUIX (DIBUIXA'T A TU MATEIX!)</div>
+    <div style="height:52mm;border:2.5px dashed #BDBDBD;border-radius:8px;background:var(--gris-clar);"></div>
   </div>
-
-  <div style="text-align:center; font-family:'Fredoka One',cursive; font-size:13pt; color:var(--muted);">
-    🌟 50 pàgines · Bloc 1: Lectoescriptura
-  </div>
-
+  <div style="text-align:center;font-family:'Fredoka One',cursive;font-size:13pt;color:var(--muted);">🌟 50 pàgines · Bloc 1: Lectoescriptura</div>
   <div class="portada-footer">Dossier d'Estiu — Final d'I5 / Inici de 1r</div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 2 – LES VOCALS                 -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 2 LES VOCALS ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 2</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 2</span></div>
   <div class="titol">LES VOCALS</div>
-
-  <div class="instruccio">
-    <span class="ico">👆</span>
-    REPASSA ELS PUNTETS I ESCRIU LES VOCALS.
-  </div>
-
-  <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:4mm; margin:5mm 0;">
+  <div class="instruccio"><span class="ico">👆</span>REPASSA ELS PUNTETS I ESCRIU LES VOCALS.</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;margin:5mm 0;">
     <div class="bloc-vocal"><div class="vocal-gran">A</div><div class="vocal-sub">a</div></div>
     <div class="bloc-vocal"><div class="vocal-gran taronja">E</div><div class="vocal-sub">e</div></div>
     <div class="bloc-vocal"><div class="vocal-gran verd">I</div><div class="vocal-sub">i</div></div>
     <div class="bloc-vocal"><div class="vocal-gran rosa">O</div><div class="vocal-sub">o</div></div>
     <div class="bloc-vocal"><div class="vocal-gran lila">U</div><div class="vocal-sub">u</div></div>
   </div>
-
   <hr class="divider">
-
-  <div class="instruccio taronja">
-    <span class="ico">✏️</span>
-    ESCRIU LES 5 VOCALS 3 VEGADES CADA UNA.
-  </div>
-
+  <div class="instruccio taronja"><span class="ico">✏️</span>ESCRIU LES 5 VOCALS 3 VEGADES CADA UNA.</div>
   <div class="lines-bloc">
-    <div class="write-line"></div>
-    <div class="write-line"></div>
-    <div class="write-line"></div>
-    <div class="write-line"></div>
-    <div class="write-line"></div>
+    <div class="write-line"></div><div class="write-line"></div><div class="write-line"></div>
+    <div class="write-line"></div><div class="write-line"></div>
   </div>
-
   <hr class="divider">
-
-  <div class="instruccio verd">
-    <span class="ico">🎨</span>
-    PINTA LES VOCALS DE COLOR GROC.
+  <div class="instruccio verd"><span class="ico">🎨</span>PINTA LES VOCALS DE COLOR GROC.</div>
+  <div style="display:flex;justify-content:space-around;align-items:center;margin:5mm 0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">A</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">B</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">E</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">M</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">I</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">R</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">O</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:28pt;border:3px solid #E0E0E0;width:18mm;height:18mm;display:flex;align-items:center;justify-content:center;border-radius:8px;">U</div>
   </div>
-
-  <div style="display:flex; justify-content:space-around; align-items:center; margin:5mm 0;">
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">A</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">B</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">E</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">M</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">I</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">R</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">O</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:28pt; border:3px solid #E0E0E0; width:18mm; height:18mm; display:flex; align-items:center; justify-content:center; border-radius:8px;">U</div>
-  </div>
-
-  <div class="recompensa pg-footer">
-    <span class="page-title" style="color:var(--muted);">Ho has fet molt bé! 🎉</span>
-    <span class="star-buit">⭐</span><span class="star-buit">⭐</span><span class="star-buit">⭐</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 2</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 3 – REPASSO LA LLETRA A i E    -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 3 LLETRES A i E ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 3</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 3</span></div>
   <div class="titol">REPASSO LES LLETRES A i E</div>
-
-  <!-- LLETRA A -->
-  <div class="instruccio">
-    <span class="ico">👆</span>
-    REPASSA LA LLETRA A. SEGUEIX LES FLETXES!
-  </div>
-
+  <div class="instruccio"><span class="ico">👆</span>REPASSA LA LLETRA A. SEGUEIX LES FLETXES!</div>
   <div class="lletra-punteig">
     <div class="lletra-box model">A</div>
-    <div class="lletra-box" style="color:#E0E0E0; font-family:'Fredoka One',cursive; font-size:36pt; display:flex; align-items:center; justify-content:center;">A</div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">A</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
   </div>
-
   <div class="instruccio taronja"><span class="ico">✏️</span>ESCRIU LA LLETRA A 6 VEGADES.</div>
-  <div class="lines-bloc">
-    <div class="write-line"></div>
-    <div class="write-line"></div>
-  </div>
-
+  <div class="lines-bloc"><div class="write-line"></div><div class="write-line"></div></div>
   <div class="instruccio verd"><span class="ico">🔎</span>TROBA I ENCERCLA TOTES LES "A" D'AQUESTA PARAULA:</div>
-  <div style="text-align:center; font-family:'Fredoka One',cursive; font-size:36pt; letter-spacing:5mm; color:var(--text); margin:3mm 0; border:2.5px solid #E0E0E0; border-radius:10px; padding:4mm; background:var(--gris-clar);">
-    A N A N A S
-  </div>
-
+  <div style="text-align:center;font-family:'Fredoka One',cursive;font-size:36pt;letter-spacing:5mm;color:var(--text);margin:3mm 0;border:2.5px solid #E0E0E0;border-radius:10px;padding:4mm;background:var(--gris-clar);">A N A N A S</div>
   <hr class="divider">
-
-  <!-- LLETRA E -->
-  <div class="instruccio taronja">
-    <span class="ico">👆</span>
-    REPASSA LA LLETRA E. SEGUEIX LES FLETXES!
-  </div>
-
+  <div class="instruccio taronja"><span class="ico">👆</span>REPASSA LA LLETRA E. SEGUEIX LES FLETXES!</div>
   <div class="lletra-punteig">
     <div class="lletra-box model taronja">E</div>
-    <div class="lletra-box" style="color:#E0E0E0; font-family:'Fredoka One',cursive; font-size:36pt; display:flex; align-items:center; justify-content:center;">E</div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">E</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
   </div>
-
   <div class="instruccio"><span class="ico">✏️</span>ESCRIU LA LLETRA E 6 VEGADES.</div>
-  <div class="lines-bloc">
-    <div class="write-line"></div>
-    <div class="write-line"></div>
-  </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 3</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="lines-bloc"><div class="write-line"></div><div class="write-line"></div></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 3</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 4 – REPASSO LES LLETRES I, O, U-->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 4 I, O, U ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 4</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 4</span></div>
   <div class="titol verd">REPASSO LES LLETRES I, O i U</div>
-
-  <!-- LLETRA I -->
   <div class="instruccio verd"><span class="ico">👆</span>REPASSA LA LLETRA I.</div>
   <div class="lletra-punteig">
     <div class="lletra-box model verd">I</div>
-    <div class="lletra-box" style="color:#E0E0E0; font-family:'Fredoka One',cursive; font-size:36pt; display:flex; align-items:center; justify-content:center;">I</div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">I</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
   </div>
   <div class="lines-bloc"><div class="write-line"></div></div>
-
   <hr class="divider">
-
-  <!-- LLETRA O -->
   <div class="instruccio rosa"><span class="ico">👆</span>REPASSA LA LLETRA O.</div>
   <div class="lletra-punteig">
     <div class="lletra-box model rosa">O</div>
-    <div class="lletra-box" style="color:#E0E0E0; font-family:'Fredoka One',cursive; font-size:36pt; display:flex; align-items:center; justify-content:center;">O</div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">O</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
   </div>
   <div class="lines-bloc"><div class="write-line"></div></div>
-
   <hr class="divider">
-
-  <!-- LLETRA U -->
   <div class="instruccio lila"><span class="ico">👆</span>REPASSA LA LLETRA U.</div>
   <div class="lletra-punteig">
     <div class="lletra-box model lila">U</div>
-    <div class="lletra-box" style="color:#E0E0E0; font-family:'Fredoka One',cursive; font-size:36pt; display:flex; align-items:center; justify-content:center;">U</div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
-    <div class="lletra-box"></div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">U</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
   </div>
   <div class="lines-bloc"><div class="write-line"></div></div>
-
   <hr class="divider">
-
   <div class="instruccio"><span class="ico">🎯</span>QUINA VOCAL FALTA? ESCRIU-LA AL QUADRAT.</div>
-  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:4mm; margin:4mm 0;">
-    <div style="font-family:'Fredoka One',cursive; font-size:22pt; text-align:center; padding:2mm; background:var(--gris-clar); border-radius:8px; letter-spacing:3px; color:var(--text);">S_L</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:22pt; text-align:center; padding:2mm; background:var(--gris-clar); border-radius:8px; letter-spacing:3px; color:var(--text);">M_R</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:22pt; text-align:center; padding:2mm; background:var(--gris-clar); border-radius:8px; letter-spacing:3px; color:var(--text);">P_U</div>
-    <div style="font-family:'Fredoka One',cursive; font-size:22pt; text-align:center; padding:2mm; background:var(--gris-clar); border-radius:8px; letter-spacing:3px; color:var(--text);">G_T</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:4mm 0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:22pt;text-align:center;padding:2mm;background:var(--gris-clar);border-radius:8px;letter-spacing:3px;">S_L</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:22pt;text-align:center;padding:2mm;background:var(--gris-clar);border-radius:8px;letter-spacing:3px;">M_R</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:22pt;text-align:center;padding:2mm;background:var(--gris-clar);border-radius:8px;letter-spacing:3px;">P_U</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:22pt;text-align:center;padding:2mm;background:var(--gris-clar);border-radius:8px;letter-spacing:3px;">G_T</div>
   </div>
-  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:4mm; margin:0 0 4mm;">
-    <div style="height:12mm; border-bottom:3px solid var(--blau); margin:0 6mm;"></div>
-    <div style="height:12mm; border-bottom:3px solid var(--taronja); margin:0 6mm;"></div>
-    <div style="height:12mm; border-bottom:3px solid var(--verd); margin:0 6mm;"></div>
-    <div style="height:12mm; border-bottom:3px solid var(--rosa); margin:0 6mm;"></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;">
+    <div style="height:12mm;border-bottom:3px solid var(--blau);margin:0 6mm;"></div>
+    <div style="height:12mm;border-bottom:3px solid var(--taronja);margin:0 6mm;"></div>
+    <div style="height:12mm;border-bottom:3px solid var(--verd);margin:0 6mm;"></div>
+    <div style="height:12mm;border-bottom:3px solid var(--rosa);margin:0 6mm;"></div>
   </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 4</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 4</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 5 – UNEIX DIBUIX I PARAULA     -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 5 UNEIX DIBUIX I PARAULA ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 5</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 5</span></div>
   <div class="titol taronja">UNEIX EL DIBUIX AMB LA PARAULA</div>
-
-  <div class="instruccio taronja">
-    <span class="ico">✏️</span>
-    UNEIX CADA DIBUIX AMB LA SEVA PARAULA. FES UNA LÍNIA.
-  </div>
-
-  <!-- Columna esquerra: dibuixos | centre: espai | dreta: paraules -->
-  <div style="display:grid; grid-template-columns:1fr 30mm 1fr; gap:4mm; margin:6mm 0; align-items:center;">
-
-    <!-- DIBUIXOS (esquerra) -->
-    <div style="display:flex; flex-direction:column; gap:7mm;">
-      <div class="uneix-emoji">🌞</div>
-      <div class="uneix-emoji">🐱</div>
-      <div class="uneix-emoji">🏠</div>
-      <div class="uneix-emoji">🍎</div>
-      <div class="uneix-emoji">🌸</div>
+  <div class="instruccio taronja"><span class="ico">✏️</span>UNEIX CADA DIBUIX AMB LA SEVA PARAULA. FES UNA LÍNIA.</div>
+  <div style="display:grid;grid-template-columns:1fr 30mm 1fr;gap:4mm;margin:6mm 0;align-items:center;">
+    <div style="display:flex;flex-direction:column;gap:7mm;">
+      <div class="uneix-emoji">🌞</div><div class="uneix-emoji">🐱</div>
+      <div class="uneix-emoji">🏠</div><div class="uneix-emoji">🍎</div><div class="uneix-emoji">🌸</div>
     </div>
-
-    <!-- ESPAI PER LÍNIES (centre) -->
-    <div style="height:100%; min-height:140mm; border-left:2px dashed #E0E0E0; border-right:2px dashed #E0E0E0;"></div>
-
-    <!-- PARAULES (dreta, ordre barrejat) -->
-    <div style="display:flex; flex-direction:column; gap:7mm;">
-      <div class="uneix-word">FLOR</div>
-      <div class="uneix-word">POMA</div>
-      <div class="uneix-word">SOL</div>
-      <div class="uneix-word">CASA</div>
-      <div class="uneix-word">GAT</div>
+    <div style="height:100%;min-height:140mm;border-left:2px dashed #E0E0E0;border-right:2px dashed #E0E0E0;"></div>
+    <div style="display:flex;flex-direction:column;gap:7mm;">
+      <div class="uneix-word">FLOR</div><div class="uneix-word">POMA</div>
+      <div class="uneix-word">SOL</div><div class="uneix-word">CASA</div><div class="uneix-word">GAT</div>
     </div>
-
   </div>
-
   <hr class="divider">
-
   <div class="instruccio verd"><span class="ico">✏️</span>ESCRIU UNA PARAULA QUE CONEIXES.</div>
   <div class="lines-bloc"><div class="write-line"></div></div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 5</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 5</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 6 – COMPTEM SÍL·LABES          -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 6 SÍL·LABES ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 6</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 6</span></div>
   <div class="titol">COMPTEM SÍL·LABES</div>
-
-  <div class="instruccio">
-    <span class="ico">👏</span>
-    PICA LES MANS MENTRE DIUS LA PARAULA. QUANTES SÍL·LABES TÉ?
-  </div>
-
-  <!-- Exemple explicat -->
-  <div style="background:#EAF3DE; border:2px solid #5aa82e; border-radius:10px; padding:4mm 6mm; margin:4mm 0; display:flex; align-items:center; gap:4mm;">
+  <div class="instruccio"><span class="ico">👏</span>PICA LES MANS MENTRE DIUS LA PARAULA. QUANTES SÍL·LABES TÉ?</div>
+  <div style="background:#EAF3DE;border:2px solid #5aa82e;border-radius:10px;padding:4mm 6mm;margin:4mm 0;display:flex;align-items:center;gap:4mm;">
     <span style="font-size:30pt;">🐱</span>
     <div>
-      <div style="font-family:'Fredoka One',cursive; font-size:16pt; color:#2D2D2D; letter-spacing:2px;">GAT</div>
-      <div style="display:flex; gap:2mm; margin-top:2mm;">
-        <div class="cercle ple">1</div>
-      </div>
-      <div style="font-size:9pt; color:var(--muted); margin-top:1mm;">→ 1 SÍL·LABA</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:16pt;letter-spacing:2px;">GAT</div>
+      <div style="display:flex;gap:2mm;margin-top:2mm;"><div class="cercle ple">1</div></div>
+      <div style="font-size:9pt;color:var(--muted);margin-top:1mm;">→ 1 SÍL·LABA</div>
     </div>
   </div>
-
   <div class="sil-grid">
-    <!-- POMA -->
-    <div class="sil-item">
-      <div class="sil-emoji">🍎</div>
-      <div class="sil-paraula">POMA</div>
-      <div class="sil-cercles">
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-      </div>
-      <div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div>
-    </div>
-    <!-- PILOTA -->
-    <div class="sil-item">
-      <div class="sil-emoji">⚽</div>
-      <div class="sil-paraula">PILOTA</div>
-      <div class="sil-cercles">
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-      </div>
-      <div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div>
-    </div>
-    <!-- CASA -->
-    <div class="sil-item">
-      <div class="sil-emoji">🏠</div>
-      <div class="sil-paraula">CASA</div>
-      <div class="sil-cercles">
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-      </div>
-      <div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div>
-    </div>
-    <!-- PAPALLONA -->
-    <div class="sil-item">
-      <div class="sil-emoji">🦋</div>
-      <div class="sil-paraula">PAPALLONA</div>
-      <div class="sil-cercles">
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-        <div class="cercle"></div>
-      </div>
-      <div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div>
-    </div>
+    <div class="sil-item"><div class="sil-emoji">🍎</div><div class="sil-paraula">POMA</div><div class="sil-cercles"><div class="cercle"></div><div class="cercle"></div><div class="cercle"></div></div><div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div></div>
+    <div class="sil-item"><div class="sil-emoji">⚽</div><div class="sil-paraula">PILOTA</div><div class="sil-cercles"><div class="cercle"></div><div class="cercle"></div><div class="cercle"></div></div><div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div></div>
+    <div class="sil-item"><div class="sil-emoji">🏠</div><div class="sil-paraula">CASA</div><div class="sil-cercles"><div class="cercle"></div><div class="cercle"></div><div class="cercle"></div></div><div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div></div>
+    <div class="sil-item"><div class="sil-emoji">🦋</div><div class="sil-paraula">PAPALLONA</div><div class="sil-cercles"><div class="cercle"></div><div class="cercle"></div><div class="cercle"></div><div class="cercle"></div></div><div class="sil-resposta">TÉ <span class="resposta-box"></span> SÍL·LABES</div></div>
   </div>
-
   <hr class="divider">
-
   <div class="instruccio taronja"><span class="ico">✏️</span>ESCRIU UNA PARAULA DE 2 SÍL·LABES I UNA DE 3.</div>
   <div class="duo-grid">
-    <div>
-      <div style="font-size:10pt; font-weight:700; color:var(--muted); margin-bottom:2mm;">2 SÍL·LABES:</div>
-      <div class="write-line"></div>
-    </div>
-    <div>
-      <div style="font-size:10pt; font-weight:700; color:var(--muted); margin-bottom:2mm;">3 SÍL·LABES:</div>
-      <div class="write-line"></div>
-    </div>
+    <div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-bottom:2mm;">2 SÍL·LABES:</div><div class="write-line"></div></div>
+    <div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-bottom:2mm;">3 SÍL·LABES:</div><div class="write-line"></div></div>
   </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 6</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 6</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 7 – SO INICIAL                 -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 7 SO INICIAL ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 7</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 7</span></div>
   <div class="titol rosa">QUIN SO INICIAL TÉ?</div>
-
-  <!-- Activitat 1: comença per P -->
-  <div class="instruccio rosa">
-    <span class="ico">🔎</span>
-    ENCERCLA LES PARAULES QUE COMENCEN PER <strong style="font-size:16pt; color:var(--rosa);">P</strong>.
-  </div>
-
+  <div class="instruccio rosa"><span class="ico">🔎</span>ENCERCLA LES PARAULES QUE COMENCEN PER <strong style="font-size:16pt;color:var(--rosa);">P</strong>.</div>
   <div class="so-grid">
     <div class="so-item"><div class="so-emoji">🍎</div><div class="so-nom">POMA</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">🐟</div><div class="so-nom">PEU</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">⚽</div><div class="so-nom">PILOTA</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">🐱</div><div class="so-nom">GAT</div><div class="tick-box"></div></div>
   </div>
-
   <hr class="divider">
-
-  <!-- Activitat 2: comença per M -->
-  <div class="instruccio">
-    <span class="ico">🔎</span>
-    ENCERCLA LES PARAULES QUE COMENCEN PER <strong style="font-size:16pt; color:var(--blau);">M</strong>.
-  </div>
-
+  <div class="instruccio"><span class="ico">🔎</span>ENCERCLA LES PARAULES QUE COMENCEN PER <strong style="font-size:16pt;color:var(--blau);">M</strong>.</div>
   <div class="so-grid">
     <div class="so-item"><div class="so-emoji">🍈</div><div class="so-nom">MELÓ</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">🐛</div><div class="so-nom">CUC</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">🌙</div><div class="so-nom">LLUNA</div><div class="tick-box"></div></div>
     <div class="so-item"><div class="so-emoji">🖐️</div><div class="so-nom">MÀ</div><div class="tick-box"></div></div>
   </div>
-
   <hr class="divider">
-
-  <!-- Activitat 3: escriu -->
-  <div class="instruccio verd">
-    <span class="ico">✏️</span>
-    ESCRIU UNA PARAULA QUE COMENCI PER CADA LLETRA.
+  <div class="instruccio verd"><span class="ico">✏️</span>ESCRIU UNA PARAULA QUE COMENCI PER CADA LLETRA.</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin:4mm 0;">
+    <div><div style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--taronja);text-align:center;margin-bottom:2mm;">S</div><div class="write-line"></div></div>
+    <div><div style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--blau);text-align:center;margin-bottom:2mm;">C</div><div class="write-line"></div></div>
+    <div><div style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--rosa);text-align:center;margin-bottom:2mm;">L</div><div class="write-line"></div></div>
   </div>
-
-  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; margin:4mm 0;">
-    <div>
-      <div style="font-family:'Fredoka One',cursive; font-size:28pt; color:var(--taronja); text-align:center; margin-bottom:2mm;">S</div>
-      <div class="write-line"></div>
-    </div>
-    <div>
-      <div style="font-family:'Fredoka One',cursive; font-size:28pt; color:var(--blau); text-align:center; margin-bottom:2mm;">C</div>
-      <div class="write-line"></div>
-    </div>
-    <div>
-      <div style="font-family:'Fredoka One',cursive; font-size:28pt; color:var(--rosa); text-align:center; margin-bottom:2mm;">L</div>
-      <div class="write-line"></div>
-    </div>
-  </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 7</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 7</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 8 – COMPLETA LES PARAULES      -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 8 COMPLETA PARAULES ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 8</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 8</span></div>
   <div class="titol">COMPLETA LES PARAULES</div>
-
-  <div class="instruccio">
-    <span class="ico">✏️</span>
-    ESCRIU LA LLETRA QUE FALTA A CADA PARAULA.
-  </div>
-
+  <div class="instruccio"><span class="ico">✏️</span>ESCRIU LA LLETRA QUE FALTA A CADA PARAULA.</div>
   <div class="completa-grid">
-    <!-- C_SA = CASA -->
-    <div class="completa-item">
-      <div class="completa-emoji">🏠</div>
-      <div class="completa-paraula">C<span class="lletra-buida"></span>SA</div>
-    </div>
-    <!-- S_L = SOL -->
-    <div class="completa-item">
-      <div class="completa-emoji">☀️</div>
-      <div class="completa-paraula">S<span class="lletra-buida"></span>L</div>
-    </div>
-    <!-- G_T = GAT -->
-    <div class="completa-item">
-      <div class="completa-emoji">🐱</div>
-      <div class="completa-paraula">G<span class="lletra-buida"></span>T</div>
-    </div>
-    <!-- P_U = PEU -->
-    <div class="completa-item">
-      <div class="completa-emoji">🦶</div>
-      <div class="completa-paraula">P<span class="lletra-buida"></span>U</div>
-    </div>
-    <!-- _INA = NINA -->
-    <div class="completa-item">
-      <div class="completa-emoji">🪆</div>
-      <div class="completa-paraula"><span class="lletra-buida"></span>INA</div>
-    </div>
-    <!-- POM_ = POMA -->
-    <div class="completa-item">
-      <div class="completa-emoji">🍎</div>
-      <div class="completa-paraula">POM<span class="lletra-buida"></span></div>
-    </div>
+    <div class="completa-item"><div class="completa-emoji">🏠</div><div class="completa-paraula">C<span class="lletra-buida"></span>SA</div></div>
+    <div class="completa-item"><div class="completa-emoji">☀️</div><div class="completa-paraula">S<span class="lletra-buida"></span>L</div></div>
+    <div class="completa-item"><div class="completa-emoji">🐱</div><div class="completa-paraula">G<span class="lletra-buida"></span>T</div></div>
+    <div class="completa-item"><div class="completa-emoji">🦶</div><div class="completa-paraula">P<span class="lletra-buida"></span>U</div></div>
+    <div class="completa-item"><div class="completa-emoji">🪆</div><div class="completa-paraula"><span class="lletra-buida"></span>INA</div></div>
+    <div class="completa-item"><div class="completa-emoji">🍎</div><div class="completa-paraula">POM<span class="lletra-buida"></span></div></div>
   </div>
-
   <hr class="divider">
-
-  <div class="instruccio taronja">
-    <span class="ico">📖</span>
-    LLEGEIX AQUESTES PARAULES EN VEU ALTA. COMPTA-LES!
-  </div>
-
+  <div class="instruccio taronja"><span class="ico">📖</span>LLEGEIX AQUESTES PARAULES EN VEU ALTA. COMPTA-LES!</div>
   <div class="paraules-grid">
-    <div class="paraula-llegir">SOL</div>
-    <div class="paraula-llegir">MÀ</div>
-    <div class="paraula-llegir">PEU</div>
-    <div class="paraula-llegir">GAT</div>
-    <div class="paraula-llegir">CASA</div>
-    <div class="paraula-llegir">PILOTA</div>
+    <div class="paraula-llegir">SOL</div><div class="paraula-llegir">MÀ</div><div class="paraula-llegir">PEU</div>
+    <div class="paraula-llegir">GAT</div><div class="paraula-llegir">CASA</div><div class="paraula-llegir">PILOTA</div>
   </div>
-
-  <div style="text-align:center; margin-top:3mm; font-family:'Fredoka One',cursive; font-size:14pt; color:var(--muted);">
-    HE LLEGIT <span style="border-bottom:3px solid var(--blau); padding:0 6mm;"></span> PARAULES!
-  </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 8</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div style="text-align:center;margin-top:3mm;font-family:'Fredoka One',cursive;font-size:14pt;color:var(--muted);">HE LLEGIT <span style="border-bottom:3px solid var(--blau);padding:0 6mm;"></span> PARAULES!</div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 8</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 9 – FRASES CURTES              -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 9 FRASES CURTES ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 9</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 9</span></div>
   <div class="titol lila">LLEGEIXO I ESCRIC FRASES</div>
-
-  <div class="instruccio lila">
-    <span class="ico">📖</span>
-    LLEGEIX LA FRASE I COPIA-LA A LA LÍNIA DE SOTA.
+  <div class="instruccio lila"><span class="ico">📖</span>LLEGEIX LA FRASE I COPIA-LA A LA LÍNIA DE SOTA.</div>
+  <div style="display:flex;flex-direction:column;gap:7mm;margin:5mm 0;">
+    <div><div style="display:flex;align-items:center;gap:3mm;margin-bottom:2mm;"><span style="font-size:22pt;">🌞</span><div style="font-family:'Fredoka One',cursive;font-size:17pt;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;border:2px solid #E0E0E0;">EL SOL BRILLA.</div></div><div class="write-line"></div></div>
+    <div><div style="display:flex;align-items:center;gap:3mm;margin-bottom:2mm;"><span style="font-size:22pt;">🐱</span><div style="font-family:'Fredoka One',cursive;font-size:17pt;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;border:2px solid #E0E0E0;">LA NINA JUGA.</div></div><div class="write-line"></div></div>
+    <div><div style="display:flex;align-items:center;gap:3mm;margin-bottom:2mm;"><span style="font-size:22pt;">🏠</span><div style="font-family:'Fredoka One',cursive;font-size:17pt;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;border:2px solid #E0E0E0;">JO TINC UN GAT.</div></div><div class="write-line"></div></div>
   </div>
-
-  <!-- Frases a copiar -->
-  <div style="display:flex; flex-direction:column; gap:7mm; margin:5mm 0;">
-
-    <div>
-      <div style="display:flex; align-items:center; gap:3mm; margin-bottom:2mm;">
-        <span style="font-size:22pt;">🌞</span>
-        <div style="font-family:'Fredoka One',cursive; font-size:17pt; color:var(--text); letter-spacing:1px; background:var(--gris-clar); border-radius:8px; padding:3mm 5mm;">EL SOL BRILLA.</div>
-      </div>
-      <div class="write-line"></div>
-    </div>
-
-    <div>
-      <div style="display:flex; align-items:center; gap:3mm; margin-bottom:2mm;">
-        <span style="font-size:22pt;">🐱</span>
-        <div style="font-family:'Fredoka One',cursive; font-size:17pt; color:var(--text); letter-spacing:1px; background:var(--gris-clar); border-radius:8px; padding:3mm 5mm;">LA NINA JUGA.</div>
-      </div>
-      <div class="write-line"></div>
-    </div>
-
-    <div>
-      <div style="display:flex; align-items:center; gap:3mm; margin-bottom:2mm;">
-        <span style="font-size:22pt;">🏠</span>
-        <div style="font-family:'Fredoka One',cursive; font-size:17pt; color:var(--text); letter-spacing:1px; background:var(--gris-clar); border-radius:8px; padding:3mm 5mm;">JO TINC UN GAT.</div>
-      </div>
-      <div class="write-line"></div>
-    </div>
-
-  </div>
-
   <hr class="divider">
-
-  <div class="instruccio taronja">
-    <span class="ico">✏️</span>
-    ESCRIU LA TEVA PRÒPIA FRASE!
-  </div>
-
-  <div style="display:flex; gap:4mm; align-items:center; margin:4mm 0;">
-    <span style="font-size:22pt;">🌟</span>
-    <div style="flex:1; border-bottom:3px solid var(--taronja); height:14mm;"></div>
-  </div>
-
+  <div class="instruccio taronja"><span class="ico">✏️</span>ESCRIU LA TEVA PRÒPIA FRASE!</div>
+  <div style="display:flex;gap:4mm;align-items:center;margin:4mm 0;"><span style="font-size:22pt;">🌟</span><div style="flex:1;border-bottom:3px solid var(--taronja);height:14mm;"></div></div>
   <hr class="divider">
-
-  <div class="instruccio verd">
-    <span class="ico">🎨</span>
-    DIBUIXA LA TEVA FRASE.
-  </div>
-  <div style="height:40mm; border:2.5px dashed #BDBDBD; border-radius:8px; background:var(--gris-clar);"></div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 9</span>
-    <span class="star-buit">⭐</span>
-  </div>
+  <div class="instruccio verd"><span class="ico">🎨</span>DIBUIXA LA TEVA FRASE.</div>
+  <div style="height:40mm;border:2.5px dashed #BDBDBD;border-radius:8px;background:var(--gris-clar);"></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 9</span><span class="star-buit">⭐</span></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════ -->
-<!-- PÀGINA 10 – LLEGEIX I DIBUIXA         -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ── PÀG 10 LLEGEIX I DIBUIXA ── -->
 <div class="page">
-  <div class="page-header">
-    <span class="page-title">✏️ LECTOESCRIPTURA</span>
-    <span class="estrella">⭐ ⭐ ⭐</span>
-    <span class="page-num">pàg. 10</span>
-  </div>
-
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 10</span></div>
   <div class="titol taronja">LLEGEIXO I DIBUIXO</div>
-
-  <div class="instruccio taronja">
-    <span class="ico">📖</span>
-    LLEGEIX CADA FRASE I DIBUIXA EL QUE DIU AL QUADRE!
-  </div>
-
+  <div class="instruccio taronja"><span class="ico">📖</span>LLEGEIX CADA FRASE I DIBUIXA EL QUE DIU AL QUADRE!</div>
   <div class="llegeix-grid">
-    <div class="llegeix-item">
-      <div class="frase-llegir">UNA CASA AMB UN SOL ☀️</div>
-      <div class="dibuix-area">DIBUIXA AQUÍ</div>
-    </div>
-    <div class="llegeix-item">
-      <div class="frase-llegir">UN GAT GROC 🐱</div>
-      <div class="dibuix-area">DIBUIXA AQUÍ</div>
-    </div>
-    <div class="llegeix-item">
-      <div class="frase-llegir">UN ARBRE AMB POMES 🍎</div>
-      <div class="dibuix-area">DIBUIXA AQUÍ</div>
-    </div>
-    <div class="llegeix-item">
-      <div class="frase-llegir">UN NEN AMB UNA PILOTA ⚽</div>
-      <div class="dibuix-area">DIBUIXA AQUÍ</div>
-    </div>
+    <div class="llegeix-item"><div class="frase-llegir">UNA CASA AMB UN SOL ☀️</div><div class="dibuix-area">DIBUIXA AQUÍ</div></div>
+    <div class="llegeix-item"><div class="frase-llegir">UN GAT GROC 🐱</div><div class="dibuix-area">DIBUIXA AQUÍ</div></div>
+    <div class="llegeix-item"><div class="frase-llegir">UN ARBRE AMB POMES 🍎</div><div class="dibuix-area">DIBUIXA AQUÍ</div></div>
+    <div class="llegeix-item"><div class="frase-llegir">UN NEN AMB UNA PILOTA ⚽</div><div class="dibuix-area">DIBUIXA AQUÍ</div></div>
   </div>
-
   <hr class="divider">
-
-  <!-- Mini repàs final del bloc -->
-  <div style="background:linear-gradient(90deg, #FFF9E3, #E8F8FF); border:3px solid var(--groc); border-radius:14px; padding:5mm; text-align:center;">
-    <div style="font-family:'Fredoka One',cursive; font-size:16pt; color:var(--taronja); margin-bottom:2mm;">🎉 HAS ACABAT EL PRIMER BLOC!</div>
-    <div style="font-size:11pt; color:var(--text); font-weight:600;">Demana a un adult que et posi el teu gomet preferit aquí sota 👇</div>
-    <div style="margin-top:3mm; display:flex; justify-content:center; gap:4mm;">
-      <div style="width:15mm; height:15mm; border:2.5px dashed var(--groc); border-radius:50%;"></div>
-      <div style="width:15mm; height:15mm; border:2.5px dashed var(--blau); border-radius:50%;"></div>
-      <div style="width:15mm; height:15mm; border:2.5px dashed var(--rosa); border-radius:50%;"></div>
+  <div style="background:linear-gradient(90deg,#FFF9E3,#E8F8FF);border:3px solid var(--groc);border-radius:14px;padding:5mm;text-align:center;">
+    <div style="font-family:'Fredoka One',cursive;font-size:16pt;color:var(--taronja);margin-bottom:2mm;">🎉 HAS ACABAT EL PRIMER BLOC!</div>
+    <div style="font-size:11pt;color:var(--text);font-weight:600;">Demana a un adult que et posi el teu gomet preferit aquí sota 👇</div>
+    <div style="margin-top:3mm;display:flex;justify-content:center;gap:4mm;">
+      <div style="width:15mm;height:15mm;border:2.5px dashed var(--groc);border-radius:50%;"></div>
+      <div style="width:15mm;height:15mm;border:2.5px dashed var(--blau);border-radius:50%;"></div>
+      <div style="width:15mm;height:15mm;border:2.5px dashed var(--rosa);border-radius:50%;"></div>
     </div>
   </div>
-
-  <div class="pg-footer">
-    <span></span>
-    <span style="font-size:9pt; color:var(--muted);">Dossier d'Estiu · pàg. 10</span>
-    <span style="font-family:'Fredoka One',cursive; font-size:10pt; color:var(--taronja);">FI DEL BLOC 1 ✅</span>
-  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 10</span><span style="font-family:'Fredoka One',cursive;font-size:10pt;color:var(--taronja);">FI DEL BLOC 1 ✅</span></div>
 </div>
 
+<!-- ══════════════════════════════════════════════ BLOC 2 ══ -->
+<div class="seccio-label" id="bloc2">📗 BLOC 2 — Lectoescriptura avançada (pàg. 11–20)</div>
+
+<!-- ── PÀG 11 CONSONANTS M,P,S,L,T ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 11</span></div>
+  <div class="titol">LES CONSONANTS (I)</div>
+  <div class="instruccio"><span class="ico">👆</span>REPASSA CADA LLETRA I FIXA'T EN EL DIBUIX D'EXEMPLE.</div>
+  <div class="cons-taula">
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--blau);">M</div><div class="cons-ex">🌙</div><div class="cons-nm">LLUNA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--taronja);">P</div><div class="cons-ex">🍎</div><div class="cons-nm">POMA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:#5aa82e;">S</div><div class="cons-ex">☀️</div><div class="cons-nm">SOL</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--rosa);">L</div><div class="cons-ex">🦁</div><div class="cons-nm">LLEÓ</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--lila);">T</div><div class="cons-ex">🐢</div><div class="cons-nm">TORTUGA</div></div>
+  </div>
+  <div class="instruccio"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA M.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model">M</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">M</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <div class="instruccio taronja"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA P.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model taronja">P</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">P</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <div class="instruccio verd"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA S.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model verd">S</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">S</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio groc"><span class="ico">🔎</span>TROBA LES LLETRES M, P, S, L, T EN AQUESTA PARAULA I SUBRATLLA-LES:</div>
+  <div style="text-align:center;font-family:'Fredoka One',cursive;font-size:30pt;letter-spacing:5mm;background:var(--gris-clar);border-radius:10px;padding:4mm;border:2px solid #E0E0E0;margin-top:2mm;">P A P A L L O N A</div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 11</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 12 CONSONANTS N,R,C,D,F ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 12</span></div>
+  <div class="titol taronja">LES CONSONANTS (II)</div>
+  <div class="instruccio taronja"><span class="ico">👆</span>REPASSA CADA LLETRA I FIXA'T EN EL DIBUIX D'EXEMPLE.</div>
+  <div class="cons-taula">
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--taronja);">N</div><div class="cons-ex">🌊</div><div class="cons-nm">NIT</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--rosa);">R</div><div class="cons-ex">🐸</div><div class="cons-nm">GRANOTA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--blau);">C</div><div class="cons-ex">🐎</div><div class="cons-nm">CAVALL</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:#5aa82e;">D</div><div class="cons-ex">🦷</div><div class="cons-nm">DENT</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--lila);">F</div><div class="cons-ex">🌸</div><div class="cons-nm">FLOR</div></div>
+  </div>
+  <div class="instruccio taronja"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA N.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model taronja">N</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">N</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <div class="instruccio rosa"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA R.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model rosa">R</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">R</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <div class="instruccio"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA C.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model">C</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">C</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio verd"><span class="ico">🎯</span>ESCRIU UNA PARAULA QUE COMENCI PER CADA LLETRA.</div>
+  <div class="trio-grid">
+    <div><div style="font-family:'Fredoka One',cursive;font-size:26pt;color:var(--taronja);text-align:center;margin-bottom:2mm;">N</div><div class="write-line-sm"></div></div>
+    <div><div style="font-family:'Fredoka One',cursive;font-size:26pt;color:var(--rosa);text-align:center;margin-bottom:2mm;">R</div><div class="write-line-sm"></div></div>
+    <div><div style="font-family:'Fredoka One',cursive;font-size:26pt;color:var(--blau);text-align:center;margin-bottom:2mm;">C</div><div class="write-line-sm"></div></div>
+  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 12</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 13 CONSONANTS G,B,V,J,Z ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 13</span></div>
+  <div class="titol verd">LES CONSONANTS (III)</div>
+  <div class="instruccio verd"><span class="ico">👆</span>REPASSA CADA LLETRA I FIXA'T EN EL DIBUIX D'EXEMPLE.</div>
+  <div class="cons-taula">
+    <div class="cons-cell"><div class="cons-ll" style="color:#5aa82e;">G</div><div class="cons-ex">🐸</div><div class="cons-nm">GRANOTA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--blau);">B</div><div class="cons-ex">🎈</div><div class="cons-nm">BALÓ</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--taronja);">V</div><div class="cons-ex">🐮</div><div class="cons-nm">VACA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--rosa);">J</div><div class="cons-ex">🦒</div><div class="cons-nm">JIRAFA</div></div>
+    <div class="cons-cell"><div class="cons-ll" style="color:var(--lila);">Z</div><div class="cons-ex">🦊</div><div class="cons-nm">GUINEU</div></div>
+  </div>
+  <div class="instruccio verd"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA G.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model verd">G</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">G</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <div class="instruccio"><span class="ico">✏️</span>REPASSA I COPIA LA LLETRA B.</div>
+  <div class="lletra-punteig">
+    <div class="lletra-box model">B</div>
+    <div class="lletra-box" style="color:#E0E0E0;font-family:'Fredoka One',cursive;font-size:32pt;display:flex;align-items:center;justify-content:center;">B</div>
+    <div class="lletra-box"></div><div class="lletra-box"></div><div class="lletra-box"></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio taronja"><span class="ico">🔡</span>UNEIX CADA LLETRA AMB EL SEU DIBUIX.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin:4mm 0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:3mm;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;"><span style="font-family:'Fredoka One',cursive;font-size:28pt;color:#5aa82e;">G</span><span style="font-size:9pt;color:var(--muted);font-weight:600;">——————</span><span style="font-size:26pt;">🎈</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:3mm;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;"><span style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--blau);">B</span><span style="font-size:9pt;color:var(--muted);font-weight:600;">——————</span><span style="font-size:26pt;">🐸</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:3mm;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;"><span style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--taronja);">V</span><span style="font-size:9pt;color:var(--muted);font-weight:600;">——————</span><span style="font-size:26pt;">🦒</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:3mm;background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;"><span style="font-family:'Fredoka One',cursive;font-size:28pt;color:var(--rosa);">J</span><span style="font-size:9pt;color:var(--muted);font-weight:600;">——————</span><span style="font-size:26pt;">🐮</span></div>
+  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 13</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 14 PARAULES 2 SÍL·LABES ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 14</span></div>
+  <div class="titol rosa">PARAULES DE 2 SÍL·LABES</div>
+  <div class="instruccio rosa"><span class="ico">✂️</span>LLEGEIX CADA SÍL·LABA. AJUNTA-LES I ESCRIU LA PARAULA SENCERA.</div>
+  <div class="sil2-grid">
+    <div class="sil2-item"><div class="sil2-emoji">👩</div><div class="sil2-paraula-div"><div class="sil2-sil s1">MA</div><div class="sil2-guio">+</div><div class="sil2-sil s2">RE</div></div><div class="sil2-escriu"></div></div>
+    <div class="sil2-item"><div class="sil2-emoji">👨</div><div class="sil2-paraula-div"><div class="sil2-sil s1">PA</div><div class="sil2-guio">+</div><div class="sil2-sil s2">RE</div></div><div class="sil2-escriu"></div></div>
+    <div class="sil2-item"><div class="sil2-emoji">🍲</div><div class="sil2-paraula-div"><div class="sil2-sil s1">SO</div><div class="sil2-guio">+</div><div class="sil2-sil s2">PA</div></div><div class="sil2-escriu"></div></div>
+    <div class="sil2-item"><div class="sil2-emoji">🏜️</div><div class="sil2-paraula-div"><div class="sil2-sil s1">DU</div><div class="sil2-guio">+</div><div class="sil2-sil s2">NA</div></div><div class="sil2-escriu"></div></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio"><span class="ico">✏️</span>ARA PROVA TU! ESCRIU 2 PARAULES DE 2 SÍL·LABES QUE CONEIXES.</div>
+  <div class="duo-grid">
+    <div class="sil2-item" style="flex-direction:row;align-items:center;gap:3mm;"><span style="font-size:24pt;">1️⃣</span><div style="flex:1;border-bottom:2.5px solid var(--blau);height:12mm;"></div></div>
+    <div class="sil2-item" style="flex-direction:row;align-items:center;gap:3mm;"><span style="font-size:24pt;">2️⃣</span><div style="flex:1;border-bottom:2.5px solid var(--taronja);height:12mm;"></div></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio lila"><span class="ico">🎨</span>DIBUIXA LA TEVA PARAULA PREFERIDA D'AQUESTA PÀGINA.</div>
+  <div style="height:32mm;border:2.5px dashed #BDBDBD;border-radius:8px;background:var(--gris-clar);"></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 14</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 15 ORDENA LLETRES ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 15</span></div>
+  <div class="titol lila">ORDENA LES LLETRES!</div>
+  <div class="instruccio lila"><span class="ico">🔀</span>LES LLETRES ESTAN BARREJADES. ORDENA-LES I ESCRIU LA PARAULA.</div>
+  <div class="ordena-grid">
+    <div class="ordena-item"><div class="ordena-emoji">🐱</div><div class="ordena-lletres"><div class="lletra-pill">T</div><div class="lletra-pill">G</div><div class="lletra-pill">A</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+    <div class="ordena-item"><div class="ordena-emoji">☀️</div><div class="ordena-lletres"><div class="lletra-pill">L</div><div class="lletra-pill">S</div><div class="lletra-pill">O</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+    <div class="ordena-item"><div class="ordena-emoji">🍎</div><div class="ordena-lletres"><div class="lletra-pill">A</div><div class="lletra-pill">P</div><div class="lletra-pill">O</div><div class="lletra-pill">M</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+    <div class="ordena-item"><div class="ordena-emoji">🏠</div><div class="ordena-lletres"><div class="lletra-pill">S</div><div class="lletra-pill">A</div><div class="lletra-pill">C</div><div class="lletra-pill">A</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+    <div class="ordena-item"><div class="ordena-emoji">🌙</div><div class="ordena-lletres"><div class="lletra-pill">I</div><div class="lletra-pill">N</div><div class="lletra-pill">T</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+    <div class="ordena-item"><div class="ordena-emoji">🐮</div><div class="ordena-lletres"><div class="lletra-pill">C</div><div class="lletra-pill">V</div><div class="lletra-pill">A</div><div class="lletra-pill">A</div></div><div style="font-size:10pt;font-weight:700;color:var(--muted);margin-top:1mm;">ESCRIU:</div><div class="ordena-buits"><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div><div class="ordena-buit"></div></div></div>
+  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 15</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 16 COMPLETA FRASES ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 16</span></div>
+  <div class="titol">COMPLETA LES FRASES</div>
+  <div class="instruccio"><span class="ico">✏️</span>LLEGEIX LA FRASE I ESCRIU LA PARAULA QUE FALTA. T'HO INDIQUEN LES OPCIONS!</div>
+  <div class="frase-comp"><span class="frase-ico">☀️</span><span class="frase-text">EL <span class="buit-frase"></span> BRILLA AL CEL.</span></div>
+  <div class="caixa-opcions"><div class="opcio">SOL</div><div class="opcio">MAR</div><div class="opcio">GAT</div></div>
+  <div style="margin-bottom:4mm;"></div>
+  <div class="frase-comp"><span class="frase-ico">🐱</span><span class="frase-text">EL <span class="buit-frase"></span> ÉS PETIT I PELUT.</span></div>
+  <div class="caixa-opcions"><div class="opcio">PEIX</div><div class="opcio">GAT</div><div class="opcio">SOL</div></div>
+  <div style="margin-bottom:4mm;"></div>
+  <div class="frase-comp"><span class="frase-ico">🍎</span><span class="frase-text">LA <span class="buit-frase"></span> ÉS VERMELLA I DOLÇA.</span></div>
+  <div class="caixa-opcions"><div class="opcio">POMA</div><div class="opcio">CASA</div><div class="opcio">NINA</div></div>
+  <div style="margin-bottom:4mm;"></div>
+  <div class="frase-comp"><span class="frase-ico">🌊</span><span class="frase-text">A L'ESTIU ANEM A LA <span class="buit-frase"></span>.</span></div>
+  <div class="caixa-opcions"><div class="opcio">ESCOLA</div><div class="opcio">PLATJA</div><div class="opcio">BOSC</div></div>
+  <hr class="divider">
+  <div class="instruccio taronja"><span class="ico">✏️</span>ARA ESCRIU TU UNA FRASE SENCERA!</div>
+  <div style="display:flex;gap:3mm;align-items:center;margin:4mm 0;"><span style="font-size:22pt;">🌟</span><div style="flex:1;border-bottom:3px solid var(--taronja);height:14mm;"></div></div>
+  <div class="instruccio verd"><span class="ico">🎨</span>DIBUIXA LA FRASE QUE HAS ESCRIT.</div>
+  <div style="height:36mm;border:2.5px dashed #BDBDBD;border-radius:8px;background:var(--gris-clar);"></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 16</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 17 RELACIONA IMATGE-PARAULA ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 17</span></div>
+  <div class="titol taronja">RELACIONA IMATGE I PARAULA</div>
+  <div class="instruccio taronja"><span class="ico">✏️</span>UNEIX CADA DIBUIX AMB LA SEVA PARAULA. FES UNA LÍNIA.</div>
+  <div style="display:grid;grid-template-columns:1fr 30mm 1fr;gap:4mm;margin:6mm 0;align-items:center;">
+    <div style="display:flex;flex-direction:column;gap:6mm;">
+      <div class="rel-emoji">🦋</div><div class="rel-emoji">🌈</div>
+      <div class="rel-emoji">🐘</div><div class="rel-emoji">🍓</div><div class="rel-emoji">🚂</div>
+    </div>
+    <div style="height:100%;min-height:130mm;border-left:2px dashed #E0E0E0;border-right:2px dashed #E0E0E0;"></div>
+    <div style="display:flex;flex-direction:column;gap:6mm;">
+      <div class="rel-word">TREN</div><div class="rel-word">PAPALLONA</div>
+      <div class="rel-word">MADUIXA</div><div class="rel-word">ELEFANT</div>
+      <div class="rel-word">ARC DE SANT MARTÍ</div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio verd"><span class="ico">📝</span>ESCRIU 2 PARAULES NOVES QUE CONEIXES.</div>
+  <div class="duo-grid"><div><div class="write-line"></div></div><div><div class="write-line"></div></div></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 17</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 18 DICTAT VISUAL ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 18</span></div>
+  <div class="titol lila">EL DICTAT VISUAL</div>
+  <div style="background:#F0EAFE;border:2px solid var(--lila);border-radius:10px;padding:5mm;margin-bottom:5mm;">
+    <div style="font-family:'Fredoka One',cursive;font-size:13pt;color:var(--lila);margin-bottom:2mm;">COM FER-HO:</div>
+    <div style="font-size:11pt;font-weight:700;color:var(--text);line-height:1.7;">1️⃣ LLEGEIX LA PARAULA AMB CALMA.<br>2️⃣ TAPA EL MODEL AMB EL DIT.<br>3️⃣ ESCRIU-LA DE MEMÒRIA A LA LÍNIA.</div>
+  </div>
+  <div class="instruccio lila"><span class="ico">📖</span>PARAULES — LLEGEIX I COPIA DE MEMÒRIA.</div>
+  <div style="display:flex;flex-direction:column;gap:5mm;margin:4mm 0;">
+    <div class="dictat-fila"><div class="dictat-model">🏠 CASA</div><div class="dictat-escriu"></div></div>
+    <div class="dictat-fila"><div class="dictat-model">☀️ SOL</div><div class="dictat-escriu"></div></div>
+    <div class="dictat-fila"><div class="dictat-model">🍎 POMA</div><div class="dictat-escriu"></div></div>
+    <div class="dictat-fila"><div class="dictat-model">🐱 GAT</div><div class="dictat-escriu"></div></div>
+    <div class="dictat-fila"><div class="dictat-model">🌸 FLOR</div><div class="dictat-escriu"></div></div>
+  </div>
+  <hr class="divider">
+  <div class="instruccio taronja"><span class="ico">⭐</span>DICTAT DE FRASE — LLEGEIX I COPIA SENCERA.</div>
+  <div style="background:var(--gris-clar);border-radius:8px;padding:3mm 5mm;font-family:'Fredoka One',cursive;font-size:14pt;letter-spacing:1px;text-align:center;margin-bottom:3mm;border:2px solid #E0E0E0;">LA NINA JUGA AMB LA PILOTA.</div>
+  <div class="write-line"></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 18</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 19 ORDENA PARAULES ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 19</span></div>
+  <div class="titol verd">ORDENA LES PARAULES</div>
+  <div class="instruccio verd"><span class="ico">🔀</span>LES PARAULES ESTAN BARREJADES. ORDENA-LES PER FORMAR UNA FRASE.</div>
+  <div class="ordp-item"><div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-bottom:2mm;"><span class="ordp-ico">☀️</span><div class="paraula-tag">BRILLA</div><div class="paraula-tag">EL</div><div class="paraula-tag">SOL</div></div><div class="ordp-linia"></div></div>
+  <div class="ordp-item"><div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-bottom:2mm;"><span class="ordp-ico">🐱</span><div class="paraula-tag">PETIT</div><div class="paraula-tag">GAT</div><div class="paraula-tag">EL</div><div class="paraula-tag">ÉS</div></div><div class="ordp-linia"></div></div>
+  <div class="ordp-item"><div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-bottom:2mm;"><span class="ordp-ico">🍎</span><div class="paraula-tag">MENJA</div><div class="paraula-tag">POMA</div><div class="paraula-tag">UNA</div><div class="paraula-tag">JO</div></div><div class="ordp-linia"></div></div>
+  <div class="ordp-item"><div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-bottom:2mm;"><span class="ordp-ico">🌊</span><div class="paraula-tag">PLATJA</div><div class="paraula-tag">ANEM</div><div class="paraula-tag">LA</div><div class="paraula-tag">A</div></div><div class="ordp-linia"></div></div>
+  <hr class="divider">
+  <div class="instruccio rosa"><span class="ico">✏️</span>INVENTA UNA FRASE PRÒPIA AMB AQUESTES PARAULES.</div>
+  <div style="display:flex;gap:3mm;flex-wrap:wrap;margin-bottom:3mm;justify-content:center;">
+    <div class="paraula-tag" style="border-color:var(--rosa);color:var(--rosa);">ESTIU</div>
+    <div class="paraula-tag" style="border-color:var(--rosa);color:var(--rosa);">SOL</div>
+    <div class="paraula-tag" style="border-color:var(--rosa);color:var(--rosa);">PLATJA</div>
+    <div class="paraula-tag" style="border-color:var(--rosa);color:var(--rosa);">FELIÇ</div>
+  </div>
+  <div class="write-line"></div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 19</span><span class="star-buit">⭐</span></div>
+</div>
+
+<!-- ── PÀG 20 REPÀS BLOC 2 ── -->
+<div class="page">
+  <div class="page-header"><span class="page-title">✏️ LECTOESCRIPTURA</span><span class="estrella">⭐⭐⭐</span><span class="page-num">pàg. 20</span></div>
+  <div class="titol groc">REPÀS FINAL DEL BLOC 2</div>
+  <div class="instruccio"><span class="ico">📝</span>ESCRIU 3 PARAULES QUE HAS APRÈS EN AQUEST BLOC.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm;margin:3mm 0 5mm;">
+    <div style="border:2.5px dashed #BDBDBD;border-radius:8px;height:16mm;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:11pt;color:#CCC;">1</div>
+    <div style="border:2.5px dashed #BDBDBD;border-radius:8px;height:16mm;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:11pt;color:#CCC;">2</div>
+    <div style="border:2.5px dashed #BDBDBD;border-radius:8px;height:16mm;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:11pt;color:#CCC;">3</div>
+  </div>
+  <div class="instruccio taronja"><span class="ico">🔤</span>ESCRIU L'ALFABET (LES LLETRES QUE CONEIXES!).</div>
+  <div class="lines-bloc"><div class="write-line"></div><div class="write-line"></div></div>
+  <hr class="divider">
+  <div class="instruccio verd"><span class="ico">🎨</span>DIBUIXA EL QUE MÉS T'HA AGRADAT D'AQUEST ESTIU.</div>
+  <div style="height:46mm;border:2.5px dashed #BDBDBD;border-radius:10px;background:var(--gris-clar);"></div>
+  <div style="border-bottom:2px solid #E0E0E0;height:10mm;margin-top:3mm;"></div>
+  <div style="font-size:9pt;color:var(--muted);font-weight:600;text-align:center;margin-top:1mm;">EL MEU DIBUIX REPRESENTA: ____________________</div>
+  <hr class="divider">
+  <div class="repas-box">
+    <div class="repas-titol">🏆 HAS ACABAT EL BLOC 2! MOLT BÉ!</div>
+    <div style="font-size:11pt;font-weight:700;color:var(--text);margin-bottom:3mm;">Ja coneixes totes les lletres i pots escriure frases senceres! 🎉</div>
+    <div style="font-size:10pt;color:var(--muted);font-weight:600;">COL·LOCA EL TEU GOMET AQUÍ:</div>
+    <div style="margin-top:3mm;">
+      <span class="gomet-cercle" style="border-color:var(--groc);"></span>
+      <span class="gomet-cercle" style="border-color:var(--taronja);"></span>
+      <span class="gomet-cercle" style="border-color:var(--blau);"></span>
+      <span class="gomet-cercle" style="border-color:var(--rosa);"></span>
+      <span class="gomet-cercle" style="border-color:var(--lila);"></span>
+    </div>
+  </div>
+  <div class="pg-footer"><span></span><span>Dossier d'Estiu · pàg. 20</span><span style="font-family:'Fredoka One',cursive;font-size:10pt;color:var(--taronja);">FI DEL BLOC 2 ✅</span></div>
+</div>
+
+</div><!-- /pagines-wrapper -->
 </body>
 </html>
