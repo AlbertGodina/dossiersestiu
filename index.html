@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossiers d'Estiu</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --groc:    #FFD93D;
+    --taronja: #FF8C42;
+    --blau:    #4ECDC4;
+    --verd:    #7BC67E;
+    --rosa:    #FF6B9D;
+    --lila:    #C77DFF;
+    --text:    #2A2A2A;
+    --muted:   #888;
+    --bg:      #FDFAF4;
+    --card-bg: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: white;
+    border-bottom: 3px solid var(--groc);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .nav-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--taronja);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .nav-logo span { color: var(--blau); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .hero-emoji { font-size: 3.5rem; margin-bottom: 1rem; }
+  .hero-titol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.4rem;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: .75rem;
+  }
+  .hero-titol span { color: var(--taronja); }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── SECCIO NIVELLS ── */
+  .seccio {
+    max-width: 900px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+  .seccio-titol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .seccio-titol::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #EEE;
+    border-radius: 2px;
+  }
+
+  /* ── GRID DE CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    border: 2px solid #EEE;
+    padding: 1.5rem;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover:not(.disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    border-color: var(--taronja);
+  }
+  .card.disabled {
+    opacity: .55;
+    cursor: default;
+  }
+
+  .card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    border-radius: 18px 18px 0 0;
+    background: var(--taronja);
+  }
+  .card.disabled .card-accent { background: #CCC; }
+  .card-accent.blau    { background: var(--blau); }
+  .card-accent.verd    { background: var(--verd); }
+  .card-accent.lila    { background: var(--lila); }
+  .card-accent.rosa    { background: var(--rosa); }
+
+  .card-nivell {
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .card-titol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: .88rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: .25rem;
+  }
+  .badge {
+    font-size: .75rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+  }
+  .badge.disponible { background: #E8F8F4; color: #0F6E56; }
+  .badge.aviat      { background: #F5F5F5; color: #888; }
+
+  .card-prog {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .prog-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #E0E0E0;
+  }
+  .prog-dot.fet { background: var(--taronja); }
+  .prog-dot.fet.blau { background: var(--blau); }
+
+  .card-arrow {
+    font-size: 1.1rem;
+    color: var(--taronja);
+    font-weight: 800;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: .85rem;
+    color: var(--muted);
+    border-top: 2px dashed #EEE;
+  }
+  footer a { color: var(--blau); font-weight: 700; text-decoration: none; }
+
+  /* ── COM FUNCIONA ── */
+  .com-funciona {
+    background: white;
+    border-radius: 18px;
+    border: 2px solid #EEE;
+    padding: 1.75rem;
+    margin: 0 2rem 3rem;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .com-titol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: var(--blau);
+    margin-bottom: 1rem;
+  }
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  .pas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: .4rem;
+  }
+  .pas-num {
+    width: 36px; height: 36px;
+    background: var(--groc);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .pas-text { font-size: .85rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">☀️ Dossiers d'<span>Estiu</span></a>
+</nav>
+
+<div class="hero">
+  <div class="hero-emoji">📚 🖍️ 🌞</div>
+  <h1 class="hero-titol">Dossiers d'Estiu<br><span>per a Primària</span></h1>
+  <p class="hero-sub">
+    Fitxes imprimibles per consolidar aprenentatges entre cursos.<br>
+    Lectoescriptura · Matemàtiques · Jocs i reptes.
+  </p>
+</div>
+
+<!-- Com funciona -->
+<div class="com-funciona">
+  <div class="com-titol">📖 Com fer-ho servir</div>
+  <div class="passos">
+    <div class="pas">
+      <div class="pas-num">1</div>
+      <div class="pas-text">Tria el dossier del curs de l'alumne</div>
+    </div>
+    <div class="pas">
+      <div class="pas-num">2</div>
+      <div class="pas-text">Veu totes les pàgines al navegador</div>
+    </div>
+    <div class="pas">
+      <div class="pas-num">3</div>
+      <div class="pas-text">Clica "Descarregar PDF" o imprimeix</div>
+    </div>
+    <div class="pas">
+      <div class="pas-num">4</div>
+      <div class="pas-text">Entrega el dossier en paper a l'alumne</div>
+    </div>
+  </div>
+</div>
+
+<!-- Dossiers disponibles -->
+<div class="seccio">
+  <div class="seccio-titol">📂 Dossiers disponibles</div>
+  <div class="cards-grid">
+
+    <!-- I5 → 1r — DISPONIBLE -->
+    <a class="card" href="dossiers/i5-1r/index.html">
+      <div class="card-accent"></div>
+      <div class="card-nivell">Educació Infantil → Primària</div>
+      <div class="card-titol">Dossier d'I5 a 1r de Primària</div>
+      <div class="card-desc">
+        Repàs de voclas i consonants, lectura de paraules, sumes i restes visuals, formes geomètriques i jocs.
+      </div>
+      <div class="card-footer">
+        <span class="badge disponible">✅ Disponible</span>
+        <div class="card-prog">
+          <div class="prog-dot fet" title="Bloc 1 — fet"></div>
+          <div class="prog-dot fet" title="Bloc 2 — fet"></div>
+          <div class="prog-dot" title="Bloc 3 — pendent"></div>
+          <div class="prog-dot" title="Bloc 4 — pendent"></div>
+          <div class="prog-dot" title="Bloc 5 — pendent"></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- 1r → 2n — AVIAT -->
+    <div class="card disabled">
+      <div class="card-accent blau"></div>
+      <div class="card-nivell">1r → 2n de Primària</div>
+      <div class="card-titol">Dossier d'1r a 2n de Primària</div>
+      <div class="card-desc">
+        Lectura de textos curts, sumes i restes amb nombres fins al 100, introducció a la multiplicació i mesures.
+      </div>
+      <div class="card-footer">
+        <span class="badge aviat">🔜 Aviat</span>
+      </div>
+    </div>
+
+    <!-- 2n → 3r — AVIAT -->
+    <div class="card disabled">
+      <div class="card-accent verd"></div>
+      <div class="card-nivell">2n → 3r de Primària</div>
+      <div class="card-titol">Dossier de 2n a 3r de Primària</div>
+      <div class="card-desc">
+        Comprensió lectora, multiplicació i divisió, fraccions senzilles, geometria i resolució de problemes.
+      </div>
+      <div class="card-footer">
+        <span class="badge aviat">🔜 Aviat</span>
+      </div>
+    </div>
+
+    <!-- 3r → 4t — AVIAT -->
+    <div class="card disabled">
+      <div class="card-accent lila"></div>
+      <div class="card-nivell">3r → 4t de Primària</div>
+      <div class="card-titol">Dossier de 3r a 4t de Primària</div>
+      <div class="card-desc">
+        Textos narratius i descriptius, nombres fins al 10.000, divisió amb dues xifres i introducció als decimals.
+      </div>
+      <div class="card-footer">
+        <span class="badge aviat">🔜 Aviat</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Fet amb ❤️ per a mestres de Catalunya · 
+  <a href="https://github.com/TU_USUARI/dossiers-estiu" target="_blank">GitHub</a>
+</footer>
+
+</body>
+</html>
